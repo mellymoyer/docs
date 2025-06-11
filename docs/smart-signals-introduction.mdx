@@ -1,0 +1,77 @@
+---
+title: "Smart Signals Introduction"
+description: Smart signals give you actionable device intelligence for browsers and devices interacting with your application.
+---
+
+In addition to visitor identification, Fingerprint provides actionable device intelligence insights called Smart Signals. They provide details on suspicious browser or device configurations, which can indicate malicious intent. For example, you can detect bots, VPN usage, tampered browsers, or jailbroken iPhones and adjust your business logic accordingly. Read our [blog post](https://fingerprint.com/blog/power-of-smart-signals-fraud-detection-prevention/) to learn how to get the most out of Smart Signals.
+
+## Availability
+
+The availability of each Smart Signal depends on the platform (Browser, Android, or iOS) and your [billing plan](https://fingerprint.com/pricing/).
+
+* Most Smart Signals are available in the Pro Plus plan. These three signals are currently only available for Enterprise customers: [IP Blocklist](smart-signals-reference#ip-blocklist-matching), [High-Activity Device](smart-signals-reference#high-activity-device), and [Raw Device Attributes](smart-signals-reference#raw-device-attributes).
+* Enterprise plans are customized for each customer. If you are an Enterprise customer interested in one or more of these signals, please contact our [support team](https://fingerprint.com/support/) to enable them for you. Signing up for an Enterprise plan does not automatically enable all Smart signals.
+
+See [Pricing](https://fingerprint.com/pricing/) or [Smart Signals Reference](/docs/smart-signals-reference) for more details.
+
+## Setup and Usage
+
+Smart Signals are computed using the same device attributes collected for visitor identification. If you haven't already, [install the JavaScript agent on your website](/docs/install-the-javascript-agent), or add the [Android](/docs/native-android-integration), or [iOS](/docs/ios) agent to your mobile application to make identification requests.
+
+Unlike the visitor ID, Smart Signals are *not available* in the identification response sent back to the client agents. Because Smart Signals are focused on fraud detection, we only make them available through our [Server API](/reference/getevent), [Webhooks](webhooks), and [Sealed Client Results](/docs/sealed-client-results) so we can ensure you receive those results unaltered.
+
+For example, you can:
+
+1. Get the [`requestId`](/reference/get-function#requestid) from the JavaScript agent identification response and pass it to your server.
+2. Call the [GET /events](/reference/getevent) endpoint from your server-side environment and retrieve the Smart Signals in the API response.
+3. Use the Smart Signals information in your fraud prevention logic.
+
+Some signals apply to all platforms and some are specific to browsers, Android, or iOS devices. You can see a brief overview of all available signals in the tables below. For detailed information about each signal, see the [Smart Signals Reference](/docs/smart-signals-reference).
+
+## Suspect Score
+
+Suspect Score is a quick and easy way to integrate Smart Signals into your fraud protection workflow. It is a weighted average of all Smart Signals indicating how unusual or suspicious the device is in a single number.
+
+The more Smart signals return a positive result, the higher the Suspect Score. You can customize how much each Smart signal contributes to the final Suspect Score. See [Suspect Score](/docs/suspect-score) for more details.
+
+## Browser Smart Signals
+
+| Name                                                                                           | Description                                                                                                                           |
+| ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| [Bot Detection](smart-signals-reference#browser-bot-detection)                                 | Indicates bots and automated browsers like Selenium or Puppeteer.                                                                     |
+| [Browser Tampering Detection](smart-signals-reference#browser-tamper-detection)                | Indicates visitors are trying to avoid identification by using anti-detect browsers or manually altering their browser configuration. |
+| [Developer Tools Detection](/docs/smart-signals-reference#developer-tools-detection)           | Indicates Developer tools are open when the page loads.                                                                               |
+| [Incognito Detection](/docs/smart-signals-reference#browser-incognito-detection)               | Indicates visitors are using Incognito or Private browsing mode.                                                                      |
+| [Privacy-Focused Settings](/docs/smart-signals-reference#privacy-focused-settings)             | Indicates the browser is set to actively prevent fingerprinting, for example, Brave.                                                  |
+| [Raw Device Attributes](smart-signals-reference#raw-device-attributes)                         | Provides raw device attributes collected by the JavaScript agent. Enterprise plan only.                                               |
+| [Remote Control Tools Detection](/docs/smart-signals-reference#remote-control-tools-detection) | Indicates the device running the browser is being controlled remotely.                                                                |
+| [Browser VPN Detection](smart-signals-reference#vpn-detection-for-browsers)                    | Indicates visitors are using a VPN to conceal their true IP address and location.                                                     |
+| [Virtual Machine Detection](smart-signals-reference#virtual-machine-detection)                 | Indicates the browser is running inside a virtual machine.                                                                            |
+
+## Smart Signals for mobile devices
+
+| Name                                                                                                   | Description                                                                                 | Android | iOS |
+| ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------- | ------- | --- |
+| [Android Emulator Detection](/docs/smart-signals-reference#android-emulator-detection)                 | Indicates your app is running from within an Android emulator instead of a physical device. | ✅       | ❌   |
+| [Cloned App Detection](/docs/smart-signals-reference#cloned-app-detection)                             | Indicates the request is from a cloned version of your app.                                 | ✅       | ❌   |
+| [Factory Reset Detection](/docs/smart-signals-reference#factory-reset-detection)                       | Indicates the time of the most recent factory reset for this mobile device.                 | ✅       | ✅   |
+| [Frida Detection](/docs/smart-signals-reference#frida-detection)                                       | Indicates your app is being tampered with using Frida.                                      | ✅       | ✅   |
+| [Geolocation Spoofing Detection](/docs/smart-signals-reference#geolocation-spoofing-detection)         | Indicates the mobile device is trying to spoof its location.                                | ✅       | ✅   |
+| [Jailbroken Device Detection](/docs/smart-signals-reference#jailbroken-device-detection)               | Indicates your app is running on a jailbroken iOS device.                                   | ❌       | ✅   |
+| [MitM Attack Detection](/docs/smart-signals-reference#mitm-attack-detection)                           | Indicates that the request from your app is intercepted and potentially modified.           | ✅       | ✅   |
+| [Rooted Device Detection](/docs/smart-signals-reference#rooted-device-detection)                       | Indicates your app is running on a rooted Android device.                                   | ✅       | ❌   |
+| [Tampered Request Detection](/docs/smart-signals-reference#tampered-request-detection-for-mobile-apps) | Indicates the request from your app to Fingerprint's servers has been tampered with.        | ✅       | ❌   |
+| [Mobile VPN Detection](/docs/smart-signals-reference#vpn-detection-for-mobile-devices)                 | Indicates the mobile device has an active VPN connection.                                   | ✅       | ✅   |
+
+
+
+## Smart Signals common for browsers and mobile devices
+
+| Name                                                                 | Description                                                                                                                                             |
+| -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [High-Activity Device](smart-signals-reference#high-activity-device) | Detect if the device is among the top 2% of devices most frequently identified by your Fingerprint application. Enterprise plan only.                   |
+| [IP Geolocation](smart-signals-reference#ip-geolocation)             | Get the visitor's location based on their IP address.                                                                                                   |
+| [IP Blocklist](smart-signals-reference#ip-blocklist-matching)        | See if the visitor's IP address belongs to a known proxy, or a TOR node, or is associated with a previous SPAM or network attack. Enterprise plan only. |
+| [Velocity Signals](/docs/smart-signals-reference#velocity-signals)   | Detect unusually high numbers of IP addresses, countries, or linked IDs associated with a single device in a short period.                              |
+
+***

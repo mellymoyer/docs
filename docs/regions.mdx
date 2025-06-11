@@ -1,0 +1,87 @@
+---
+title: "Regions And Data Retention"
+description: Learn more about where and how we store the identification data of your visitors.
+---
+
+## Regions
+
+When creating your Fingerprint workspace, you can choose the region in which your data will be stored. Pick the one that best suits your infrastructure, latency, and regulatory compliance requirements. Your data never leaves the chosen region. Once chosen, your workspace region cannot be changed.
+
+Fingerprint supports the following regions. The Global (US) region is used by default.
+
+| Region      | Server location        | Code identifier                | Base API URL             |
+| ----------- | ---------------------- | ------------------------------ | ------------------------ |
+| Global (US) | Northern Virginia, USA | `us` (default, can be omitted) | `https://api.fpjs.io`    |
+| EU          | Frankfurt, Germany     | `eu`                           | `https://eu.api.fpjs.io` |
+| Asia        | Mumbai, India          | `ap`                           | `https://ap.api.fpjs.io` |
+
+### Specifying region for the JavaScript agent
+
+If you choose a non-default region (EU or Asia), you need to specify it when initializing the JavaScript agent. See the [JavaScript agent Reference > `region`](/reference/load-function#region) for more details.
+
+<CodeGroup>
+
+```html CDN
+<script>
+  const fpPromise = import('https://fpjscdn.net/v3/<<browserToken>>')
+    .then(FingerprintJS => FingerprintJS.load({
+      // Specify `region` as `eu` or `ap` if you don't use the default region
++     region: 'eu'
+    }));
+</script>
+```
+
+
+```javascript NPM
+import FingerprintJS from '@fingerprintjs/fingerprintjs-pro'
+ 
+const fpPromise = FingerprintJS.load({
+  apiKey: '<<browserToken>>',
+  // Specify `region` as `eu` or `ap` if you don't use the default region
++ region: 'eu'
+})
+```
+
+</CodeGroup>
+
+### Specifying region for the Server API
+
+If you choose a non-default region (EU or Asia), you need to use a corresponding base API URL (`eu.api.fpjs.io` or `ap.api.fpjs.io`) when interacting with Fingerprint Server API. See the [Server API Reference](/reference/pro-server-api#regions) for more details.
+
+<CodeGroup>
+
+```javascript EU
+curl --request GET \
+-    --url https://api.fpjs.io/events/YOUR_REQUEST_ID \
++    --url https://eu.api.fpjs.io/events/YOUR_REQUEST_ID \
+     --header 'Auth-API-Key: YOUR_API_KEY' \
+     --header 'accept: application/json'
+```
+
+
+```javascript Asia
+curl --request GET \
+-    --url https://api.fpjs.io/events/YOUR_REQUEST_ID \
++    --url https://ap.api.fpjs.io/events/YOUR_REQUEST_ID \
+     --header 'Auth-API-Key: YOUR_API_KEY' \
+     --header 'accept: application/json'
+```
+
+</CodeGroup>
+
+## Data retention
+
+For most plans, visit history is available through the Server API for the past **30 days**. For Enterprise plans, the data is kept for **90 days** or longer depending on the enterprise contract.
+
+If you need to store data for longer than your plan allows or prefer a custom storage solution, you can use [Webhooks](/docs/webhooks). Webhooks allow you to automatically receive each identification response at your custom server endpoint and save them in your database.
+
+## Data deletion
+
+As a [GDPR-compliant](/docs/dpa-gdpr) data processor, Fingerprint must delete personal information that it received from a data controller upon request.
+
+Fingerprint complies with this requirement and supports both programmatic and manual data deletion request types. In practice, that means:
+
+* If someone sends us an email with their visitor ID asking for it to be deleted, we will manually delete it.
+* Our customers can use the [Server API Delete Visitor](/reference/deletevisitordata) endpoint to programmatically delete all data associated with specific visitors.
+
+***

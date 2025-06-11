@@ -1,0 +1,61 @@
+---
+title: "Privacy And Compliance"
+description: Overview of Fingerprint's regulatory compliance and how we ensure secure and responsible visitor identification.
+---
+
+## Is Fingerprint GDPR compliant?
+
+[FingerprintJS](https://github.com/fingerprintjs/fingerprintjs/) (our source-available library) is stateless and GDPR compliant because it doesn't store data. It's a JavaScript function that creates a hash from public browser details. However, how you use the data from FingerprintJS might require user consent, which is outside the scope of this guide.
+
+[Fingerprint Identification](https://fingerprint.com/products/fingerprint-pro/) (our commercial product) is also GDPR compliant, but it’s important to understand the details behind it.
+
+### Data controller vs data processor
+
+Fingerprint Identification is a SaaS product offered as a client-server API system. Under GDPR, there are two roles: “data controllers” and “data processors.” A data controller is a website or app that decides to collect and store user data. A data processor is a third-party service that receives, stores, and processes data from the controller.
+
+Examples of data controllers are sites like eBay, Wikipedia, and YouTube. Data processors include services like DigitalOcean, AWS, and Google Cloud.
+
+Fingerprint Identification is a data processor, while a website using its API is a data controller. For example, Dropbox uses Fingerprint Identification to prevent account abuse and improve security. Dropbox is the data controller, and Fingerprint is the data processor.
+
+As a data controller, Dropbox must follow GDPR rules and collect and use the data correctly according to GDPR guidelines.
+
+As a data processor, Fingerprints must also follow GDPR and handle the data it **gets from data controllers** correctly, according to GDPR guidelines.
+
+### What obligations does Fingerprint have as a data processor?
+
+Fingerprint must [delete personal information](/reference/deletevisitordata) it receives from a data controller when requested. Fingerprint meets this requirement and supports both automatic and manual data deletion requests.
+
+### Do I need to have a GDPR consent management banner if using Fingerprint?
+
+It depends on your use case and how you are using Fingerprint:
+
+* **Attribution and personalization:** If you use Fingerprint for things like attribution or personalization, you’ll likely need to get user consent, similar to how you handle cookies.
+* **Fraud prevention and security:** If you use Fingerprint for fraud prevention, this usually falls under “Legitimate interest” according to GDPR, so explicit user consent isn’t needed. You can check the [European Commission’s definition of legitimate interest](https://commission.europa.eu/law/law-topic/data-protection/reform/rules-business-and-organisations/legal-grounds-processing-data/grounds-processing/what-does-grounds-legitimate-interest-mean_en#:~:text=Your%20company%2Forganisation%20has%20a,security%20of%20your%20IT%20systems) for more details.
+
+### If I do need user consent before identifying visitors, how do I implement it?
+
+Instead of identifying visitors automatically on page load, you can choose to explicitly trigger the Fingerprint identification request only in specific circumstances. For example, only after the visitor grants consent by clicking "Accept" on a cookie consent banner.
+
+The Fingerprint JavaScript agent only stores cookies and other metadata in the browser during the identification request. See [Identify visitors on demand](/docs/identify-visitors#identify-on-demand) for more information.
+
+### What about CCPA compliance?
+
+When using Fingerprint, you are responsible for CCPA compliance as the business, and Fingerprint acts as a Service Provider, processing Personal Information only as needed to provide the service. We do not sell or share data outside the scope of our agreement. You must inform consumers about data processing and handle consumer rights requests. Fingerprint supports compliance by helping with data deletion and protection. For more details, see our [CCPA Data Processing Addendum](/docs/dpa-ccpa).
+
+## Can you use Fingerprint to track visitors across the internet?
+
+No, Fingerprint is primarily designed for fraud prevention in the same-site context. The visitor ID is scoped to each Fingerprint workspace, not the internet at large. If two Fingerprint customers identify the same browser or device, they will receive different visitor IDs. This intentionally makes Fingerprint unsuitable for creating a global visitor activity graph across *unrelated* sites as you might do with third-party cookies.
+
+## Can you use Fingerprint for marketing attribution?
+
+Yes, you can use Fingerprint for marketing attribution and personalization *in the context of your business*. It works well for identifying visitors on the same website, or multiple websites you control, even across domains.
+
+For example, you can use Fingerprint to link a purchase to an email campaign or observe user interactions across your landing page and web application.
+
+## Can you identify visitors across multiple domains you own?
+
+Yes, you can generate the same visitor ID for the same browser or device on multiple domains you control. To do so, configure the JavaScript agent on each website with a public API key from the *same* Fingerprint workspace.
+
+If you need to query the Fingerprint Server API by domain name, you can use [linked IDs](/reference/get-function#linkedid) to associate a domain with each identification event. To ensure maximum accuracy when using [proxy integrations](/docs/protecting-the-javascript-agent-from-adblockers), each website needs to proxy requests through its own domain or subdomain.
+
+***

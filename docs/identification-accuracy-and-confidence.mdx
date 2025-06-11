@@ -1,0 +1,131 @@
+---
+title: "Identification, Accuracy, And Confidence Score"
+description: Learn about the different methods Fingerprint uses to identify visitors, how Fingerprint defines and maintains accuracy, and how to use confidence score in your applications.
+---
+
+To identify a browser or a device, Fingerprint collects several properties from them. Our advanced machine-learning models use these properties to create a unique visitor ID.
+
+## Identification methods
+
+Fingerprint uses one of the following approaches to identify browsers and devices:
+
+* **Deterministic Identification**: This method uses browser or device properties that are unique and reliable (*aka* deterministic properties). [HTTP cookie](https://en.wikipedia.org/wiki/HTTP_cookie) is an example of such a property. These properties are accurate, but may not be available in situations like:
+
+  * Private or incognito browsing modes.
+  * Browser storage is cleared.
+  * Third-party cookies are not available in certain browsers. See [Safari Intelligent Tracking Prevention](/docs/browser-and-device-support#safari-intelligent-tracking-prevention).\
+    In such situations, Fingerprint identifies visitors using probabilistic identification.
+
+* **Probabilistic identification:** This method uses non-deterministic properties such as screen resolution, timezone, etc. These properties are combined to create a unique identifier for a browser or device. To learn more, see [The Top 7 Browser Fingerprinting Techniques Explained](https://fingerprint.com/blog/browser-fingerprinting-techniques/).\
+  This method introduces a probability of error because non-deterministic properties change over time and their values could be the same between two identical browsers. These factors can cause Fingerprint to create the same identifier for two different visitors or identify the same visitor differently.
+
+## Identification accuracy
+
+Identification accuracy primarily applies to probabilistic identification. It defines the ability to identify returning browsers and devices precisely.
+
+## How is identification accuracy measured?
+
+We measure accuracy by performing prediction experiments with two sets of data in which:
+
+* The *control* dataset is the set of deterministically identified events.
+* The *test* dataset is created by removing the deterministic properties.
+* The events in the test dataset are re-identified.
+* The visitor IDs in the test dataset are compared with the visitor IDs in the control dataset.
+
+The comparison results can be categorized as one of:
+
+* **True-positive:** The visitor ID remained the same in both control and test datasets.
+* **False-positive:** The visitor ID in the test dataset is different from that of the control. This browser has been incorrectly identified as another **existing** browser.
+* **False-negative:** The visitor ID does not exist in the control dataset. This browser has been incorrectly identified as a new browser.
+
+<Tip>
+### Identification accuracy for mobile devices is higher than that of browsers
+
+We identify mobile devices using properties that remain stable for longer durations than those used to identify browsers.
+
+</Tip>
+
+At Fingerprint, we maintain industry-leading accuracy by continually striving to keep the false-positive and false-negative numbers as minimal as possible.
+
+## Confidence Score
+
+When you make an identification request, the [response](/reference/get-function#get-response) contains a confidence score.
+
+<CodeGroup>
+
+```json JSON
+{
+  "requestId": "8nbmT18x79m54PQ0GvPq",
+  "visitorId": "2JGu1Z4d2J4IqiyzO3i4",
+  "confidence": {
+    "score": 0.995,
+    "revision": 1.1
+  }
+}
+```
+
+</CodeGroup>
+
+The confidence score indicates the probability of a false-positive identification. It is a floating point number whose value ranges from 0 to 1. The higher the value, the more confident Fingerprint is about not misidentifying this browser as another.
+
+## Using confidence score in your application
+
+You can use the confidence score to improve security and user experience. A few examples:
+
+* **Prevent account takeover**: You can use the confidence score to request additional verification. For example, request OTP for browsers whose confidence score is below 0.95.
+* **Increase conversion:** You can use the confidence score to profile an anonymous user. For example, you can offer tailor-made promotions and enhance the user experience.
+
+The thresholds given here are only examples. Finding the optimal threshold for your use case may require iterative experiments.
+
+## How is the confidence score calculated?
+
+In simple terms, the confidence score is calculated as
+
+```
+confidenceScore = 1 - falsePositiveProbability
+```
+
+Where `falsePositiveProbability` represents the probability of a false-positive identification. It is deduced by our prediction experiments.
+
+## Understanding the confidence score
+
+**First-time browsers or devices**
+
+Fingerprint identifies a browser or a device as new only when it cannot find a match for this browser in your data. In this case, the probability of a false-positive identification becomes 0. Hence the confidence score for such new browsers or devices is **1.0**
+
+An existing browser could also be incorrectly identified as a first-time browser. The confidence score in this case will still be 1.0. Because, it doesn't state the probability of a false-negative identification, only false-positive rather.
+
+**Returning visitors identified deterministically**
+
+The deterministic properties are unique, even among identical browsers. It is not possible to incorrectly identify one browser as another. In other words, the `falsePositiveProbability` is **0**. Hence, the confidence score for these browsers or devices is **1.0.**
+
+**Returning visitors identified probabilistically**
+
+The probabilistic properties are not as unique as the deterministic properties. This increases the chances of incorrectly identifying a browser as another. In other words, the `falsePositiveProbability` is greater than 0. Hence the confidence score for these browsers or devices is always **less than 1.0.** Even when future identifications are deterministic (see Example).
+
+<Tip>
+### Tip
+
+You can use the [visitorFound](/reference/get-function#visitorfound) property to distinguish first-time browsers from returning browsers.
+
+</Tip>
+
+## Example: Confidence score for different scenarios
+
+<Frame caption="">
+  <img src="https://files.readme.io/f77b015fdeb391b82587b1ec4ef6fa1cf7e0a575eecbdfbe95e34ddd9b06346c-ConfidenceScore4.png" />
+</Frame>
+
+## How is accuracy different from confidence score?
+
+### Accuracy
+
+* Represents the **overall value** that Fingerprint provides you. For example, a 98% true-positive rate would mean that, in the absence of deterministic properties, only 2% of your visitors may be identified incorrectly.
+* It is not associated with an individual identification request.
+
+### Confidence Score
+
+* For an identification request, it represents the probability of **only** the false-positive identification. It should not be used to determine the overall accuracy of the product.
+* Unlike accuracy, confidence score enables you to make real-time decisions as described [here](/docs/identification-accuracy-and-confidence#using-confidence-score-in-your-application).
+
+***

@@ -1,0 +1,119 @@
+---
+title: "Introduction"
+description: Learn how you can prevent fraud and improve user experiences with Fingerprint.
+---
+<iframe
+  width="560"
+  height="315"
+  src="https://www.youtube.com/embed/3NPt7Mg9a4w?si=cst-jsvlUXyuq2mG"
+  title="YouTube video player"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowfullscreen
+></iframe>
+## What is Fingerprint?
+
+**Fingerprint is a software-as-a-service that identifies online devices and provides valuable information about them.** Fingerprint doesn't scan human fingerprints like biometric systems do. Instead, it creates a unique identifier for each device, called a "Visitor ID," which stays permanently tied to that device. It works on both web browsers and mobile devices, making sure the devices are accurately identified on any platform.
+
+### How it works
+
+Fingerprint uses browser and device fingerprinting along with advanced server techniques, like statistical ID generation and machine learning, to create a unique visitor ID such as **`xPFysGV25VxZcGQUxVIt`**. This ID stays the same over time, even if the device’s settings or software changes or if cookies are deleted or unavailable.
+
+You can see your own device ID by visiting [our demo](https://demo.fingerprint.com/playground). While there, try revisiting in incognito mode or with your VPN on. Your visitor ID will be the same.
+
+Our stable visitor IDs are helpful when people try to hide their identity online, like in fraud detection or protecting accounts. They also make things easier for trusted users by reducing the need for constant logins or CAPTCHA checks because trusted users can be recognized easily. Fingerprint is designed to not need any permissions, so users won’t see permission prompts in their browser or on their phone.
+
+### Our products
+
+Fingerprint has two main products that work together to help you identify and understand your visitors better.
+
+* [**Identification**](https://fingerprint.com/products/identification/): Our main product creates very accurate and stable visitor IDs. These IDs help stop fraud by looking at how devices are used and can also make the user experience better.
+* [**Smart Signals**](https://fingerprint.com/products/smart-signals/): Along with Identification, Smart Signals provide extra insights into visitor behavior, like spotting [bots](/docs/smart-signals-reference#browser-bot-detection), [VPN use](/docs/smart-signals-reference#vpn-detection-for-browsers), or [tampered browsers](/docs/smart-signals-reference#browser-tamper-detection). These insights help you identify and respond to suspicious activity more effectively.
+
+## Fingerprint Identification vs. FingerprintJS
+
+Fingerprint's [Identification](https://fingerprint.com/products/identification/) product is significantly better than its source-available library, **FingerprintJS**. Both tools recognize devices, but Fingerprint Identification gives more accurate and detailed information. Please see to the FingerprintJS vs. Fingerprint Identification [comparison table](https://github.com/fingerprintjs/fingerprintjs/blob/master/docs/comparison.md) for a feature-by-feature breakdown of the differences.
+
+### FingerprintJS
+
+FingerprintJS has been a key tool for browser fingerprinting since it was created on [GitHub](https://github.com/fingerprintjs/fingerprintjs) in 2012. It’s still the most accurate source-available fingerprinting library, with its code available for anyone to check out. The latest version, v4, uses the [BSL license](https://mariadb.com/bsl11/). Older versions used the MIT license but no longer work with modern browsers like Safari 17. You can learn more about the license change in this [blog post](https://fingerprint.com/blog/fingerprintjs-license-change).
+
+FingerprintJS is a JavaScript library that collects browser details to make a unique ID called a "fingerprint." It works quickly and runs on the client side, so no backend is needed. However, it has some limits:
+
+* **Same fingerprints on similar devices**: FingerprintJS can give the same fingerprint for devices with the same setup. For example, two iPhone 15s using Safari will have the same fingerprint, which makes it hard to tell them apart.
+* **Changes affect fingerprints**: The fingerprints can change when things like time zone, OS, or browser updates happen. This makes them less reliable for long-term use.
+
+### The advantages of Fingerprint Identification
+
+Fingerprint Identification is our main commercial product, offering big improvements over FingerprintJS. It works as a client-server system, using a client-side SDK to gather data and send it to Fingerprint for processing. This allows Fingerprint Identification to:
+
+* **Give more accurate identification**: Unlike FingerprintJS, it can tell apart devices with the same setup (like two iPhone 15s), making sure each device gets a unique and steady visitor ID.
+* **Work on more platforms**: It works not just on web browsers but also on mobile devices and connects easily with APIs, webhooks, and cloud tools.
+* **Stay stable over time**: The visitor IDs it creates stay the same for months, even with changes to the device or software, making it more reliable for long-term use.
+
+## Fingerprint design patterns
+
+Fingerprint can be used in various ways to prevent fraud and improve user experience. Here are some common patterns to use its visitor IDs effectively:
+
+* Comparing visitor IDs
+* Counting visitor IDs linked to data
+* Counting data linked to a visitor ID
+
+### Comparing visitor IDs
+
+This pattern generates a visitor ID before important actions, like a login. It is then compared to the previous ID for the same user. If they match, the user can continue without extra checks. If they don’t match, it could mean a different device or an unauthorized attempt, so extra verification, like a one-time code, is recommended. This helps to make sure only authorized users can perform sensitive actions.
+
+### Counting visitor IDs linked to data
+
+Here, each time a key action happens — like logging in, creating an account, or making a purchase — a visitor ID is added to a list for that user or account. If the list gets too big (e.g., more than five IDs), it might mean several devices are being used by the same user. This could suggest account sharing or unauthorized access. This could trigger alerts or ask for extra verification to protect the account.
+
+### Counting data linked to a visitor ID
+
+This pattern tracks how many internal IDs (like account IDs or transaction IDs) are connected to one visitor ID. For example, if a visitor ID is linked to many new account attempts, it could signal possible fraud, like multiple account creation. By looking at these connections, you can spot and prevent fraud, such as account farming or coupon abuse.
+
+## Use cases
+
+Fingerprint can be used in many ways to prevent fraud and improve user experience based on the design patterns mentioned above. Here are three common examples. You can find more on our [demo hub](https://demo.fingerprint.com/).
+
+### Reducing login friction
+
+The pattern used here is***comparing visitor IDs***.
+
+Compare the visitor IDs from past and current logins to make logging in easier without compromising security. The first time a user logs in, create and save a visitor ID. For future logins, create a new ID and compare it to the saved one. If they match, the login can go through without extra checks. This reduces friction while keeping the login process secure.
+
+### Account sharing prevention
+
+The pattern used here is***counting visitor IDs linked to data***.
+
+By counting the number of visitor IDs accessing a single account, you can effectively prevent account sharing. For example, if more than a certain number of devices (e.g., more than 3) are used to log into the same account, you can prompt the user to verify their identity or restrict further logins until they confirm ownership. This approach ensures that the account is used as intended without relying on frequent MFA or other disruptive measures.
+
+### New account fraud
+
+The pattern used here is***counting data linked to a visitor ID***.
+
+In some use cases, users shouldn’t be able to create multiple accounts. Instead of using methods like Single Sign-On or phone validation every time, which can hurt the user experience, generate a visitor ID each time a new account is created. If the number of accounts linked to that ID is small (e.g., 3 or fewer), let it continue. If the number is high (e.g., more than 3), trigger extra checks, like phone validation, to prevent fraud.
+
+## Future-proof, reliable, and secure
+
+Browsers like Safari, Chrome, and Brave are adding more privacy features, like Safari 17's updates, Google’s Privacy Sandbox, and Brave’s anti-fingerprinting. It’s normal to wonder what this means for the future of fingerprinting. However, Fingerprint is still a strong and reliable solution.
+
+For over 10 years, Fingerprint has provided industry-leading accuracy. Some browsers have added tools to block fingerprinting. These tools haven’t worked well because fingerprinting uses basic browser APIs required for building web applications. Blocking it completely would break parts of the internet.
+
+Even if future updates make fingerprinting less effective, Fingerprint Identification will still be one of the most accurate for two reasons:
+
+1. **Universal Impact**: Any browser changes will affect all identification solutions, but Fingerprint will remain highly accurate in comparison, even if slightly less so.
+2. **Hybrid Approach**: Fingerprint Identification combines server data with browser data to create stable visitor IDs. The server-side component keeps accuracy high as browsers change.
+
+Fingerprint is also built to perform well without crashing your app. It has strong error handling and a timeout feature, making integration smooth. If generating a visitor ID takes too long (like on older devices), the process stops safely, avoiding disruptions for users.
+
+On the security side, Fingerprint makes it very hard for attackers to fake a visitor ID. Developers can check for ID mismatches and add extra security checks when needed without annoying users. With these protections, Fingerprint stays a reliable and secure solution that can adapt to browser changes while keeping its accuracy and performance high.
+
+## Want to get help?
+
+If you're a developer, please join our[Discord channel](https://discord.com/invite/39EpE2neBg)for technical discussions.
+
+If you’re a GitHub user, please use[discussions](https://github.com/fingerprintjs/fingerprintjs/discussions)and open[issues](https://github.com/fingerprintjs/fingerprintjs/issues).
+
+If you’re a customer, our [US-based support](https://fingerprint.com/support/) is always ready to help!
+
+***

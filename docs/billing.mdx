@@ -1,0 +1,117 @@
+---
+title: "Billing And Account Limits Explained"
+description: A guide to understanding our API request-based billing and related concepts
+---
+
+## Fingerprint Platform Billing
+
+Customers are billed monthly based on the number of identification API requests made over the billing period. The Fingerprint Platform has two plans: [Pro Plus and Enterprise](https://fingerprint.com/pricing/?utm_source=https://dev.fingerprint.com/docs/quick-start-guide).
+
+<Info>
+Check out our [Pricing](https://fingerprint.com/pricing/) to learn which plan is best for your needs.
+
+</Info>
+
+Custom pricing options are available for businesses that require 6,000,000 annual API requests or more. Please reach out to our [Sales team](https://fingerprint.com/contact-sales/).
+
+### Identification API request as a billing unit
+
+A billable API request happens when you *successfully* use the Fingerprint client agent to identify a browser or mobile device. Identification requests successfully processed by Fingerprint generate a `requestId` that is returned in the response.
+
+* All identification requests with an assigned request ID are billable.
+* Requests that do not generate a request ID are not billed.
+
+The following requests are **billable**:
+
+* Calling the [`get()`](/reference/get-function) function of the Fingerprint JavaScript agent.
+* Calling the [`getVisitorId()`](/docs/ios-sdk#getting-a-visitorid) function of the iOS SDK.
+* Calling the [`getVisitorId()`](/docs/android-sdk#getting-a-visitorid) function of the Android SDK.
+* Calling equivalent functions in our [Flutter](/docs/flutter), [React Native](/docs/fingerprintjs-pro-react-native), or [frontend libraries](/docs/frontend-libraries).
+
+The following requests are **not billable**:
+
+* Downloading the client agent (calling the [`load()`](/reference/load-function) function) is not billable.
+* Requests to [Server API](/reference/pro-server-api) are not billable.
+* Requests blocked by ad blockers or application firewalls are generally not billed.
+* Failed requests that result in an error without generating a request ID are not billed.
+* Throttled identification requests are not billed.
+* Requests filtered by [Request Filtering](/docs/request-filtering) are not billed.
+
+If you encounter any billing issues or believe the billing is not working correctly, please reach out to [our support team](https://fingerprint.com/support/) to resolve your issue.
+
+#### How many API calls will I need?
+
+If you're unsure how many API calls you'll need, try these two options:
+
+1. Start with an [unlimited 14-day free trial](https://dashboard.fingerprint.com/signup) to test all Fingerprint products. By the end, you'll know how many API calls you need.
+2. If a trial isn’t possible, estimate the number of important actions where you'll use Fingerprint, like logins, account creation, payments, refunds, or return requests.
+
+### Android API Call Allowance
+
+Pro Plus customers receive 500,000 free Android API calls per month. These API calls apply when using our [Android SDK](/docs/android-sdk), [React Native](/docs/fingerprintjs-pro-react-native), or [Flutter](/docs/flutter) SDKs within an Android app. See [more details](/docs/android-api-call-allowance) on the allowance.
+
+### Caching
+
+When your application code retrieves visitor data from the application cache, it is not billed. Only requests that hit the Fingerprint backend are billed. Our [frontend libraries](https://fingerprint.com/sdk-libraries/) for specific web frameworks provide various caching strategies.
+
+The number of billed requests will depend on your selected caching strategy. See [Caching visitor information](/docs/caching-visitor-information) for more details.
+
+### Smart signals
+
+[Smart signals](/docs/smart-signals-overview) (for example, Bot Detection, VPN Detection, and more) are available to users on the Pro Plus or Enterprise plans.
+
+### Billing changes
+
+We reserve the right to change the billing model for our current or future products. In the event of an upcoming billing change, we'll send a notification to all our customers with a notification at least 30 days before the billing change event.
+
+### Other Fingerprint platform features
+
+Other Fingerprint platform features, such as [Server API requests](/reference/pro-server-api), [Webhooks](/docs/webhooks), [Custom subdomains](/docs/custom-subdomain-setup), [Request filtering](/docs/request-filtering), [Proxy integrations](/docs/protecting-the-javascript-agent-from-adblockers#cloud-proxy-integrations), [libraries, and SDKs](https://fingerprint.com/sdk-libraries/) are free of charge with certain limitations per account. See below for more details.
+
+## Account limits
+
+All Fingerprint **accounts** are limited to **one unlimited 14-day free trial**. After you sign up, you are automatically enrolled in the free trial and can try the Fingerprint API without limitations. After the trial period ends, you must upgrade to a paid plan to continue using Fingerprint.
+
+All Fingerprint **workspaces** have the following default limits:
+
+| Resource                | Default Limit                                                                      | Notes                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| ----------------------- | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| SSL certificates        | 50                                                                                 | Trials are limited to **5 certificates**.                                                                                                                                                                                                                                                                                                                                                                                         |
+| API Keys                | 10                                                                                 | The number of API keys that an workspace can have. Includes **public**, **secret**, and **proxy** keys.                                                                                                                                                                                                                                                                                                                           |
+| Monthly API requests    | **unlimited**                                                                      | Only Identification API requests count towards your monthly plan or are billed. Server API requests are free.                                                                                                                                                                                                                                                                                                                     |
+| API Rate Limit          | 5 requests per second ([\*bursts](/docs/billing#rate-limiting---burst-protection)) | The maximum number of API requests per second for the public keys used for Identification and Smart Signals calculations, as well as the secret keys for accessing the [Server API](/reference/pro-server-api) endpoints (`/visitors` and `/events`). It is possible to increase the limit on [Enterprise plan](https://fingerprint.com/pricing/?utm_source=https://dev.fingerprint.com/docs/account-limits) by emailing support. |
+| Webhook endpoints       | 5                                                                                  | [Webhooks](/docs/webhooks).                                                                                                                                                                                                                                                                                                                                                                                                       |
+| Request filtering rules | 15                                                                                 | [Request filtering rules](/docs/request-filtering) that an workspace can have in total. Includes **allowed/forbidden origins** and **forbidden HTTP headers**.                                                                                                                                                                                                                                                                    |
+| Visit history           | 30 days                                                                            | For plans, visit history is available through the [Server API](/reference/pro-server-api) for the past 30 days. For Enterprise plans, the data is kept for 90 days or longer depending on the enterprise contract.                                                                                                                                                                                                                |
+
+<Info>
+### Increasing Limits
+
+If you are a customer and want to increase a limit, please reach out to [our support team](https://fingerprint.com/support/).
+
+</Info>
+
+### Rate Limiting - Burst Protection
+
+Short unexpected traffic spikes could normally cause request throttling if the API key exceeded the API Rate Limit. **Burst protection** prevents that by allowing peak traffic to be higher than usual for a short period of time. The allowed burst size (bucket) is always `API Rate Limit * 3` (15 RPS in the default configuration). The burst bucket automatically regenerates every second by `API Rate Limit - RPS` when the current RPS is lower than the `API Rate Limit`.
+
+#### Examples
+
+Real world examples of burst bucket depletion with different RPS values (considering the default `API Rate Limit` value above):
+
+* Burst bucket **never depletes** when RPS is 5
+* Burst bucket depletes **in 15 seconds** on 6 RPS
+* Burst bucket depletes **in 3 seconds** on 10 RPS
+* Burst bucket depletes **in 1 second** on 20 RPS
+
+Whenever the bucket depletes, the service starts dropping requests above `API Rate Limit`.
+
+### How am I protected from overpaying?
+
+Fingerprint offers two types of **surge protection** for all customer accounts. First is DDoS protection, so you won't be charged for API calls during an attack. Second is a web application firewall (WAF) that blocks harmful or abusive bot requests.
+
+Each request also goes through a customizable [request filtering](/docs/request-filtering) layer. This lets you block requests from unknown sources, limit API calls to certain web apps, or ignore requests based on HTTP headers.
+
+In the rare case a malicious surge gets through, we can waive the API call charges.
+
+***

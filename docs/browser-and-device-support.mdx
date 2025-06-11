@@ -1,0 +1,51 @@
+---
+title: "Browser And Device Support"
+description: An overview of Fingerprint compatibility across various browsers and devices.
+---
+
+## Browsers
+
+Fingerprint supports all popular browsers. We aim to cover at least 99% of all users according to our Fingerprint Identification statistics. The overall identification accuracy of traffic coming from supported browsers is industry-leading based on all Fingerprint identification statistics. Our research and development team continuously monitors releases of supported browsers and adjusts our identification algorithm if necessary.
+
+At the moment, the supported browsers are:
+
+| Browser          | Version | Notes                                                                  |
+| ---------------- | ------- | ---------------------------------------------------------------------- |
+| Edge             | 105+    |                                                                        |
+| Chrome           | 73+     |                                                                        |
+| Firefox          | 89+     |                                                                        |
+| Desktop Safari   | 13.0+   | See [below](#safari-intelligent-tracking-prevention) for more details. |
+| Mobile Safari    | 13.0+   |                                                                        |
+| Samsung Internet | 14.0+   |                                                                        |
+| Brave            | all     | See [below](#brave-browser-support) for more details.                  |
+
+Browsers not listed here may work, but we don't make guarantees about identification functionality or accuracy.
+
+The identification accuracy of individual browsers may vary, and their impact on your overall identification accuracy depends on their prevalence in your traffic. See [Understanding our accuracy](/docs/understanding-our-995-accuracy) for an explanation of how we measure our accuracy.
+
+### Safari Intelligent Tracking Prevention
+
+Apple Safari has an on-by-default privacy protection feature called [Intelligent Tracking Protection](https://webkit.org/blog/9521/intelligent-tracking-prevention-2-3/), or ITP. ITP has been very effective in preventing cross-site tracking by completely disabling 3rd-party cookies and capping the lifetime of all script-writable website data.
+
+By default, the Fingerprint API uses 3rd party cookies (both client-side set with `document.cookie` and server-side set with the `Set-Cookie` HTTP header) and script-writable website data (localStorage) to more reliably [identify returning visitors](https://fingerprint.com/blog/browser-fingerprinting-techniques/). All of these methods are affected by ITP, lowering identification accuracy. View the methods for [keeping identification accuracy high](#keeping-identification-accuracy-high) to maximize identification accuracy.
+
+### Brave browser support
+
+[Brave](https://brave.com/) is a privacy-focused browser based on Chromium. For our purposes, it behaves similarly to Chrome with a strict ad-blocking extension installed. That means it blocks the agent download and identification requests to Fingerprint CDN and API. View the methods for [keeping identification accuracy high](#keeping-identification-accuracy-high) to ensure your requests are not blocked.
+
+### Keeping identification accuracy high
+
+Ad-blocking extensions and browser features can disrupt visitor identification. To maintain high identification accuracy even with Safari and Brave, you need to use a [custom subdomain setup](/docs/custom-subdomain-setup) or a cloud proxy integration like [Cloudflare](/docs/cloudflare-integration) or [Cloudfront](/docs/cloudfront-proxy-integration-v2). These methods allow you to route Fingerprint HTTP requests through your domain, preventing browsers from blocking them and making cookies set by Fingerprint considered "first-party." See [Protecting the JavaScript agent from ad-blockers](/docs/protecting-the-javascript-agent-from-adblockers) for more details.
+
+## Mobile devices
+
+Fingerprint supports most iOS and Android devices in circulation today. The overall identification accuracy of traffic coming from mobile devices is even higher than that of browsers, thanks to long-lasting system-level attributes available on mobile platforms.
+
+At the moment, the supported OS versions are:
+
+| OS      | Version                               | Notes                                                                                |
+| ------- | ------------------------------------- | ------------------------------------------------------------------------------------ |
+| Android | 5.0 Lollipop (API Level 21) or higher | See [Android](/docs/native-android-integration#supported-versions) for more details. |
+| iOS     | 13+                                   | See [iOS](/docs/ios#supported-versions) for more details.                            |
+
+***

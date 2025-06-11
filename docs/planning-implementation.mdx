@@ -1,0 +1,78 @@
+---
+title: "Planning Your Implementation"
+description: Key considerations to think through before implementing Fingerprint
+---
+
+Before adding Fingerprint to your platform, it's important to plan how you'll use device intelligence to meet your needs. Fingerprint gives you the data, but you decide how to use it. It’s flexible and easy to integrate, but you’ll need to figure out where to apply it and what actions to take based on the insights. This guide covers the key steps to consider for a smooth implementation.
+
+## Assess key device intelligence touchpoints
+
+To make the most of Fingerprint, it's important to know where it will be most useful on your platform. Are you focusing on stopping fraud or making your site more personalized? Begin by finding the pages or actions on your site that need visitor identification. These are usually places where sensitive actions happen or where it's important to understand user behavior. Common areas include:
+
+* **Login pages**: Verify users by recognizing the devices they use.
+* **Transactions and checkouts**: Check high-value transactions to detect suspicious purchases.
+* **Account updates**: Add more security when users change important info, like passwords or personal details.
+
+You will also need to decide when or how often to make identification requests. [Caching of the visitor ID](/docs/identify-visitors#caching-the-visitor-id) can help to avoid unnecessary calls. However, frequent identification is important for maintaining accuracy, as it allows small browser and device changes to be noticed over time.
+
+Additionally, think about [common patterns](/docs/introduction#fingerprint-design-patterns) that apply to most sites that might apply to your environment. These include comparing current and past visitor IDs to check if users are returning. You can also count visitor IDs linked to one user to find account sharing or unauthorized access. Another option is checking how many things, like account or transaction IDs, the visitor ID links to. Use these patterns to understand where visitor identification fits your platform's needs.
+
+## Establish baselines for visitor behavior
+
+Next, you should analyze your visitor traffic to understand what normal behavior looks like for your platform. You can do this by using Fingerprint in a test phase or your current general analytics data.
+
+For example, is it normal for many devices to access a single account? If so, how many devices is typical? Do most users log in from the same device every time? Knowing these baselines helps you understand what’s normal and know when to raise red flags.
+
+Next, consider what device characteristics are more unusual for your users. For instance, if most of your users don’t [use VPNs](/docs/smart-signals-reference#vpn-detection-for-browsers) or [incognito mode](/docs/smart-signals-reference#browser-incognito-detection), you may consider those behaviors as risky.
+
+## Define responses for flagged activity
+
+After you understand what normal and suspicious behavior looks like for your platform, the next step is deciding how to respond. Having a range of responses based on the level of risk helps balance security with user experience.
+
+Based on the data you get from Fingerprint, here are some options:
+
+* **Allow the action**: For visitors with no signs of suspicious behavior, allow the action to proceed without adding extra steps, like MFA. This keeps the experience smooth for legitimate users.
+* **Add extra friction**: If something seems off, you can add steps to verify the action. For example, if a user tries to make a purchase from an unfamiliar device, you could send a one-time code before completing the transaction.
+* **Block the action**: Stop the action completely for high-risk behavior, like a bot trying to change account settings. This helps prevent unauthorized access or fraud.
+* **Manual review**: In some use cases, it may make sense to flag the activity for manual review. This allows your team to look into the situation before making a final decision.
+
+## Prepare for data storage and system integrations
+
+When implementing Fingerprint, plan how to store, manage, and integrate the IDs and device signals it provides. Fingerprint keeps identification data for a short time, usually 30 to 90 days, based on your plan. Decide if this works for you or if you need to store the data longer in your own storage.
+
+<Info>
+### Staying compliant with data privacy laws
+
+When storing identification data, make sure to consider your business needs and data regulations like GDPR, CCPA, and other applicable laws. Beyond storage, consider user consent requirements. Consent isn’t always needed for [legitimate interests](https://commission.europa.eu/law/law-topic/data-protection/reform/rules-business-and-organisations/legal-grounds-processing-data/grounds-processing/what-does-grounds-legitimate-interest-mean_en#:~:text=Your%20company%2Forganisation%20has%20a,security%20of%20your%20IT%20systems) like fraud prevention but may be required for uses like personalization. To [stay compliant](/docs/privacy-and-compliance), be sure to follow user consent and [data residency](/docs/regions) rules.
+
+</Info>
+
+Plan how to analyze Fingerprint data so you can assess your setup and make it more effective. Set clear metrics, like the number of account takeovers prevented or fraudulent purchases stopped. Review these metrics often to adjust your logic and rules.
+
+Consider how Fingerprint data will fit into other systems. This might mean [sending device signals to your Web Application Firewalls (WAFs)](https://fingerprint.com/blog/bot-detection-powered-application-firewall/) or fraud detection models. Look for areas where Fingerprint can improve security or enhance the user experience.
+
+## Map out installation and API usage
+
+To integrate Fingerprint, you will need to add our [JavaScript agent](/docs/install-the-javascript-agent) to your website in your frontend code. If you're building mobile applications, we offer [SDKs](/docs/mobile-sdks) for both native apps and apps made with multi-platform frameworks. You’ll need to make a choice on how to safely get Fingerprint results to your server: [Server API](/reference/pro-server-api), [Webhooks](/docs/webhooks), or [Sealed Client Results](/docs/sealed-client-results).
+
+The Server API can be accessed directly or through one of our [backend SDKs](/docs/backend-libraries). Requests should be made from a backend server capable of securely storing and accessing secret keys.
+
+You can also set up Fingerprint to send you identification data using webhooks. If you choose this option, you'll need to create an endpoint on your server to receive and handle these webhook events. Webhooks provide a great way to store the full historical record of your event data.
+
+Finally, with Sealed Client Results, Enterprise customers can get a fully encrypted front-end response payload from the JavaScript agent. This payload contains the same data that is available through the `/events` Server API endpoint.
+
+### Choose an ad blocker evasion strategy
+
+To ensure you’re able to properly identify all visitors to your site, it's important to [evade ad blockers](/docs/protecting-the-javascript-agent-from-adblockers). You can set up a custom subdomain pointing to Fingerprint's infrastructure to reduce request blocking. You can also use one of the available cloud proxy integrations for [Cloudflare](/docs/cloudflare-integration), [Akamai](/docs/akamai-proxy-integration), [CloudFront](/docs/cloudfront-proxy-integration-v2), and [others](/docs/protecting-the-javascript-agent-from-adblockers#cloud-proxy-integrations). Both methods protect identification requests from getting blocked by proxying them through your own domain. For more details, read the full documentation on [protecting the JavaScript agent from ad blockers](/docs/protecting-the-javascript-agent-from-adblockers).
+
+## Getting started
+
+Ready to get started now that you've planned out your implementation? We're [here to help you](https://fingerprint.com/support/) take the next step. Get started with identifying [browsers](/docs/install-the-javascript-agent) and [mobile devices](/docs/mobile-sdks), or explore our [demos](https://demo.fingerprint.com/) to see Fingerprint in action. You can also dive into our [technical tutorials](https://fingerprint.com/blog/tag/tutorials/) to guide you through specific examples or refer to our open-source [reference implementation](https://github.com/fingerprintjs/fingerprintjs-pro-use-cases) to tackle common use cases.
+
+Here are a few demos to help you hit the ground running:
+
+* [Credential stuffing prevention](https://demo.fingerprint.com/credential-stuffing)
+* [Web scraping protection](https://demo.fingerprint.com/web-scraping)
+* [Paywall enforcement](https://demo.fingerprint.com/paywall)
+
+***

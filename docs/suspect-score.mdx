@@ -1,0 +1,130 @@
+---
+title: "Suspect Score"
+description: Suspect Score is an easy way to integrate Smart Signals into your fraud protection work flow. It is a weighted representation of all Smart Signals present in the payload that helps identify suspicious activity.
+---
+
+## What is Suspect Score
+
+**Suspect Score** is a single value representing how many Smart Signals indicative of suspicious or fraudulent activity were triggered for a particular `requestId`. Each triggered Smart Signal is represented by a positive integer called a weight. Weights are additive, meaning that the more Smart Signals return a positive value, the higher the final score.
+
+It's part of the Smart Signals payload available in Server API, Webhooks and Sealed Client Results.
+
+<Warning>
+### New Smart Signal Weights
+
+Once a new Smart Signal is released, **new customers** will receive the updated **default weight** assigned to that signal.\
+For **existing customers**, we initially assign the value **0** to avoid skewing the existing Suspect Score results. The value can be manually configured, as outlined in the *[Custom Weights Configuration](/docs/suspect-score#custom-weights-configuration)* section, to enable that signal’s influence on the score.
+
+</Warning>
+
+## Suspect Score Weights
+
+Each Smart Signal has its own **weight**, contributing to the final **score**. The weights are currently based on the probability that the selected Smart Signal is triggered on a global scale. Smart Signals that are less likely to be triggered have stronger weights, and vice versa.
+
+Weights might have slightly different values based on the request's originating platform (web, Android and iOS). This is caused by different representation of average traffic for each platform.
+
+<Info>
+### 
+
+**N/A** in the table below means that the signal is not reflected in the *Suspect Score*. This might happen for two reasons - either the signal is not available on that particular platform (see our [Smart Signals Cheat Sheet page](/docs/smart-signals-cheat-sheet) for signal availability) **or** the signal had low incidence rate and would skew the computation too much (the weight would be extremely high).
+
+</Info>
+
+### Weights Table
+
+| Smart Signal                                                                                                     | Web/Browser | Android | iOS |
+| ---------------------------------------------------------------------------------------------------------------- | ----------- | ------- | --- |
+| [Bot Detection](/docs/smart-signals-reference#browser-bot-detection) (`bot.type == bad`)                         | 7           | N/A     | N/A |
+| [Incognito Detection](/docs/smart-signals-reference#browser-incognito-detection) (`incognito`)                   | 4           | N/A     | N/A |
+| [VPN Detection](/docs/smart-signals-reference#timezonemismatch) (`timezoneMismatch`)                             | 3           | 4       | 4   |
+| [VPN Detection](/docs/smart-signals-reference#publicvpn) (`publicVPN`)                                           | 4           | 5       | 5   |
+| [VPN Detection](/docs/smart-signals-reference#osmismatch) (`osMismatch`)                                         | N/A         | N/A     | N/A |
+| [VPN Detection](/docs/smart-signals-reference#result-1) (`auxiliaryMobile`)                                      | N/A         | 6       | 6   |
+| [Tampering Detection](/docs/smart-signals-reference#browser-tamper-detection) (`tampering`)                      | 8           | N/A     | N/A |
+| [Virtual Machine Detection](/docs/smart-signals-reference#virtual-machine-detection) (`virtualMachine`)          | 14          | N/A     | N/A |
+| [Remote Control Tools Detection](/docs/smart-signals-reference#remote-control-tools-detection) (`remoteControl`) | 14          | N/A     | N/A |
+| [Developer Tools Detection](/docs/smart-signals-reference#developer-tools-detection) (`developerTools`)          | 8           | N/A     | N/A |
+| [Velocity Signals](/docs/smart-signals-reference#velocity-signals) (`velocity`)                                  | N/A         | N/A     | N/A |
+| [Privacy-Focused Settings](/docs/smart-signals-reference#privacy-focused-settings) (`privacySettings`)           | 6           | N/A     | N/A |
+| [IP Blocklist](/docs/smart-signals-reference#ip-blocklist-matching) (`emailSpam`)                                | 14          | 12      | 13  |
+| [IP Blocklist](/docs/smart-signals-reference#ip-blocklist-matching) (`attackSource`)                             | 13          | 13      | 13  |
+| [Tor Exit Node](/docs/smart-signals-reference#ip-blocklist-matching) (`tor`)                                     | 14          | 16      | 17  |
+| [Public Proxy](/docs/smart-signals-reference#ip-blocklist-matching) (`proxy`)                                    | 14          | 12      | 15  |
+| [Android Emulator Detection](/docs/smart-signals-reference#android-emulator-detection) (`emulator`)              | N/A         | 9       | N/A |
+| [Rooted Device Detection](/docs/smart-signals-reference#rooted-device-detection) (`rootApps`)                    | N/A         | 12      | N/A |
+| [Cloned App Detection](/docs/smart-signals-reference#cloned-app-detection) (`clonedApp`)                         | N/A         | 9       | N/A |
+| [Jailbroken Device Detection](/docs/smart-signals-reference#jailbroken-device-detection) (`jailbreak`)           | N/A         | N/A     | 10  |
+| [Frida Detection](/docs/smart-signals-reference#frida-detection) (`frida`)                                       | N/A         | 14      | N/A |
+| [MitM Attack Detection](/docs/smart-signals-reference#mitm-attack-detection) (`mitmAttack`)                      | N/A         | 14      | 14  |
+| [High-Activity Device](/docs/smart-signals-reference#high-activity-device) (`highActivity`)                      | 6           | 5       | 6   |
+
+## How to Use Suspect Score
+
+Suspect Score can be used to flag and review possible suspicious activity. It can be used to **quickly integrate Smart Signals** into your fraud protection workflow without the need to explore fraud correlations of individual Smart Signals.
+
+<CodeGroup>
+
+```json Suspect Score in /events
+"suspectScore": {
+  "data": {
+    "result": 0
+  }
+}
+```
+
+
+```json Suspect Score in Webhooks
+"suspectScore": {
+  "result": 0
+}
+```
+
+</CodeGroup>
+
+## Custom Weights Configuration
+
+Because Suspect Score values are computed based on statistical analysis over our global data, there might be a lot of cases where individual weights need some tweaks depending on the use case.
+
+As an example, some customers might want to exclude VPN flags from the final Suspect Score computation because a large amount of their visitors use a VPN by default (this is typical in some specific industries).
+
+Our Dashboard has an interface to assign custom weights to each Smart Signal, tailoring the score to precisely match particular scenarios. To configure Suspect Score weights, follow these steps:
+
+1. Go to the [Dashboard](https://dashboard.fingerprint.com)
+2. Navigate to **Smart Signals** -> **Suspect Score**
+3. Select the correct tab based on the platform for which you would like to configure the weights (**Web**, **iOS** SDK or **Android** SDK)
+
+<Frame caption="Step 3: Select platform tab">
+  <img src="https://files.readme.io/df9687e28e5eb83ce998c99c5455a026d7eb38b006e5e63dde38fad923502aa6-CleanShot_2024-11-06_at_16.28.572x.png" />
+</Frame>
+
+
+4. Input your preferred weights as integers between 0 and 10000 on the right
+5. Click on **Save Changes**
+
+<Frame caption="Step 5: Save changes">
+  <img src="https://files.readme.io/ddc62bd780bae2c703578b1a8a1f696773fb8e0cb88a11e7357c7a9a1a081efe-CleanShot_2024-11-06_at_16.30.482x.png" />
+</Frame>
+
+The changes will propagate in a matter of minutes and you will start receiving the Suspect Score based on your custom weights.
+
+## Disabling a Weight Completely
+
+Some scenarios like the one mentioned above with the high VPN incidence rate might result in the need to disable a particular Smart Signal. In those cases it's possible to set the weight to zero through a dedicated button in the user interface.
+
+<Frame caption="Set weight to 0 to disable it">
+  <img src="https://files.readme.io/acf6ca4d2abdc856835a65df76ae1f18440fc67dbc22983b74b003151c392737-CleanShot_2024-11-06_at_16.37.582x.png" />
+</Frame>
+
+The changes have to be saved at the bottom of the page to propagate.
+
+## Restoring Defaults
+
+We will always provide a set of default values based on our internal understanding of Smart Signal incidence rates (the statistical analysis mentioned in a previous section). Individual Suspect Score weights can be restored to those defaults by clicking on the **restore default weight value** button.
+
+<Frame caption="Restore weight to its default value">
+  <img src="https://files.readme.io/317120400dd22b1506330105a8b9f9a696bd614ed8751b44337f92ea00b0bcc2-CleanShot_2024-11-06_at_16.37.072x.png" />
+</Frame>
+
+The changes have to be saved at the bottom of the page to propagate.
+
+***

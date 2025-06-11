@@ -1,0 +1,117 @@
+---
+title: "Overview"
+sidebarTitle: "Overview"
+---
+
+**Management API** allows you to manage your Fingerprint account and workspaces programmatically from a server environment.
+
+Management API is only for server-side usage, it's not intended to be used from the client side, whether it's a browser or a mobile device.
+
+<Tip>
+### Management API requests do not count toward your monthly plan and are not billed.
+
+</Tip>
+
+## Getting started
+
+Management API is available globally:
+
+| Region | Base URL                         |
+| ------ | -------------------------------- |
+| Global | `https://management-api.fpjs.io` |
+
+You can use Management API for all your workspaces, regardless of their region.
+
+### Authentication
+
+Management API requests are authorized by using the **Management API key** that can be obtained in your Fingerprint Dashboard by visiting**[API Keys](https://dashboard.fingerprint.com/api-keys)**.
+
+Set your API key as a Bearer token in the `Authorization` header:
+
+```
+Authorization: Bearer your-management-api-key
+```
+
+Read more about [Authentication](/reference/management-api-authentication).
+
+### Version
+
+Management API is versioned by date of the backwards-incompatible change made to the API. The latest version is `2024-05-20`.
+
+Set the version as in the `X-API-Version` header:
+
+```
+X-API-Version: 2024-05-20
+```
+
+Read more about [Versioning](/reference/management-api-versioning).
+
+### Making a request
+
+Now we're ready to make our first request!
+
+We can try to list all our environments by calling `GET https://management-api.fpjs.io/environments`. Note the added `Authorization` and `X-API-Version` headers.
+
+<CodeGroup>
+
+```powershell cURL
+curl -XGET -H 'Authorization: Bearer your-management-api-key' -H 'X-API-Version: 2024-05-20' 'https://management-api.fpjs.io/environments'
+```
+
+</CodeGroup>
+
+You should get a response listing all your workspace environments:
+
+<CodeGroup>
+
+```json JSON
+{
+  "data": [
+    {
+      "id": "env_ff035a1dd7655da15295fa5fa89362a7",
+      "name": "Default environment",
+      "created_at": "2023-10-05T14:48:00.000Z"
+    }
+  ]
+}
+```
+
+</CodeGroup>
+
+And you're all set! Feel free to explore other methods available in Management API.
+
+### Rate limiting
+
+Management API is rate limited. The limit is enforced for every **Management API key**, and the default rate limit per API key is **5 req/sec**.
+
+If you are an [Enterprise plan](https://fingerprint.com/pricing/) customer and your use case requires a higher limit, please reach out to our [support team](https://fingerprint.com/support/).
+
+### Client SDKs
+
+SDKs for specific languages are coming soon!
+
+## Using API reference
+
+You can try calling the Management API directly from this documentation:
+
+1. Go to one listed API methods, for example **[List environments](/reference/environmentcontroller_findall)**.
+2. Set your API key as**Authorization** bearer token.
+3. Set API version by setting **X-API-Version** header to `2024-05-20`.
+4. Click **Try it!**.
+
+A real API response will appear in the**Response**section.
+
+## Other resources
+
+<Info>
+### 
+
+If you want to get information about visitors and identification events, check the [Server API](/reference/pro-server-api) .
+
+If you want to identify browsers in your web application, read our[JS Agent guide](/docs/js-agent).
+
+If you want to identify mobile devices using native mobile SDKs, see[Android](/docs/native-android-integration)or[iOS](/docs/ios).
+
+</Info>
+
+***
