@@ -8,9 +8,12 @@
     "dark": "#FF5E24"
   },
   "favicon": "/favicon.png",
+  "icons": {
+    "library": "lucide"
+  },
   "appearance": {
     "default": "light",
-    "strict": true
+    "strict": false
   },
   "background": {
     "color": {
