@@ -64,7 +64,7 @@
               "/reference/management-api",
               {
                 "group": "Endpoints",
-                "openapi": "https://management-api.fpjs.io/docs-yaml GET environments"
+                "openapi": "https://management-api.fpjs.io/docs-yaml"
               }
             ]
           }
