@@ -58,6 +58,12 @@
       {
         "tab": "API Reference",
         "openapi": "/fingerprint-server-api.yaml"
+      },
+      {
+        "tab": "Changelogs",
+        "pages": [
+          "changelog/js-agent-changelog.mdx"
+        ]
       }
     ],
     "global": {
