@@ -62,7 +62,9 @@
       {
         "tab": "Changelogs",
         "pages": [
-          "/changelogs/js-agent-changelog"
+          "/changelogs/js-agent",
+          "/changelogs/ios-sdk",
+          "/changelogs/android-sdk"
         ]
       }
     ],
