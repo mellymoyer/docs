@@ -62,7 +62,7 @@
       {
         "tab": "Changelogs",
         "pages": [
-          "changelog/js-agent-changelog.mdx"
+          "changelog.mdx"
         ]
       }
     ],
