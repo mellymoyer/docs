@@ -27,11 +27,7 @@
         "groups": [
           {
             "group": "Getting started",
-            "pages": [
-              "docs/quick-start-guide",
-              "ext-link",
-              "ext-link-2"
-            ]
+            "pages": ["docs/quick-start-guide", "ext-link", "ext-link-2"]
           },
           {
             "group": "Understanding Fingerprint",
@@ -57,7 +53,30 @@
       },
       {
         "tab": "API Reference",
-        "openapi": "/fingerprint-server-api.yaml"
+        "groups": [
+          {
+            "group": "Fingerprint Server API",
+            "openapi": "/fingerprint-server-api.yaml"
+          },
+          {
+            "group": "Management API",
+            "pages": [
+              "/reference/management-api",
+              {
+                "group": "Endpoints",
+                "openapi": "https://management-api.fpjs.io/docs-yaml"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Changelogs",
+        "pages": [
+          "/changelogs/js-agent",
+          "/changelogs/ios-sdk",
+          "/changelogs/android-sdk"
+        ]
       }
     ],
     "global": {
