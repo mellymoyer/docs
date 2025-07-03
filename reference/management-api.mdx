@@ -8,8 +8,7 @@ sidebarTitle: "Overview"
 Management API is only for server-side usage, it's not intended to be used from the client side, whether it's a browser or a mobile device.
 
 <Tip>
-### Management API requests do not count toward your monthly plan and are not billed.
-
+  ### Management API requests do not count toward your monthly plan and are not billed.
 </Tip>
 
 ## Getting started
@@ -24,7 +23,7 @@ You can use Management API for all your workspaces, regardless of their region.
 
 ### Authentication
 
-Management API requests are authorized by using the **Management API key** that can be obtained in your Fingerprint Dashboard by visiting**[API Keys](https://dashboard.fingerprint.com/api-keys)**.
+Management API requests are authorized by using the **Management API key** that can be obtained in your Fingerprint Dashboard by visiting\*\*[API Keys](https://dashboard.fingerprint.com/api-keys)\*\*.
 
 Set your API key as a Bearer token in the `Authorization` header:
 
@@ -48,7 +47,7 @@ Read more about [Versioning](/reference/management-api-versioning).
 
 ### Making a request
 
-Now we're ready to make our first request!
+Now we're ready to make our first request\!
 
 We can try to list all our environments by calling `GET https://management-api.fpjs.io/environments`. Note the added `Authorization` and `X-API-Version` headers.
 
@@ -78,7 +77,7 @@ You should get a response listing all your workspace environments:
 
 </CodeGroup>
 
-And you're all set! Feel free to explore other methods available in Management API.
+And you're all set\! Feel free to explore other methods available in Management API.
 
 ### Rate limiting
 
@@ -88,30 +87,29 @@ If you are an [Enterprise plan](https://fingerprint.com/pricing/) customer and y
 
 ### Client SDKs
 
-SDKs for specific languages are coming soon!
+SDKs for specific languages are coming soon\!
 
 ## Using API reference
 
 You can try calling the Management API directly from this documentation:
 
-1. Go to one listed API methods, for example **[List environments](/reference/environmentcontroller_findall)**.
+1. Go to one listed API methods, for example [**List environments**](/reference/environmentcontroller_findall).
 2. Set your API key as**Authorization** bearer token.
 3. Set API version by setting **X-API-Version** header to `2024-05-20`.
-4. Click **Try it!**.
+4. Click **Try it\!**.
 
-A real API response will appear in the**Response**section.
+A real API response will appear in the **Response **section.
 
 ## Other resources
 
 <Info>
-### 
+  ### 
 
-If you want to get information about visitors and identification events, check the [Server API](/reference/pro-server-api) .
+  If you want to get information about visitors and identification events, check the [Server API](/reference/pro-server-api) .
 
-If you want to identify browsers in your web application, read our[JS Agent guide](/docs/js-agent).
+  If you want to identify browsers in your web application, read our[JS Agent guide](/docs/js-agent).
 
-If you want to identify mobile devices using native mobile SDKs, see[Android](/docs/native-android-integration)or[iOS](/docs/ios).
-
+  If you want to identify mobile devices using native mobile SDKs, see[Android](/docs/native-android-integration)or[iOS](/docs/ios).
 </Info>
 
-***
+---
