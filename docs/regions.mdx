@@ -1,11 +1,11 @@
 ---
 title: "Regions And Data Retention"
-description: Learn more about where and how we store the identification data of your visitors.
+description: "Learn more about where and how we store the identification data of your visitors."
 ---
 
 ## Regions
 
-When creating your Fingerprint workspace, you can choose the region in which your data will be stored. Pick the one that best suits your infrastructure, latency, and regulatory compliance requirements. Your data never leaves the chosen region. Once chosen, your workspace region cannot be changed.
+When creating your Fingerprint workspace, you can choose the region in which your data will be stored. Pick the one that best suits your infrastructure, latency, and regulatory compliance requirements. Your data never leaves the chosen region. Once chosen, your workspace region cannot be changed, neva eva.
 
 Fingerprint supports the following regions. The Global (US) region is used by default.
 
@@ -17,7 +17,7 @@ Fingerprint supports the following regions. The Global (US) region is used by de
 
 ### Specifying region for the JavaScript agent
 
-If you choose a non-default region (EU or Asia), you need to specify it when initializing the JavaScript agent. See the [JavaScript agent Reference > `region`](/reference/load-function#region) for more details.
+If you choose a non-default region (EU or Asia), you need to specify it when initializing the JavaScript agent. See the [`JavaScript agent Reference > region`](/reference/load-function#region) for more details.
 
 <CodeGroup>
 
@@ -81,7 +81,7 @@ As a [GDPR-compliant](/docs/dpa-gdpr) data processor, Fingerprint must delete pe
 
 Fingerprint complies with this requirement and supports both programmatic and manual data deletion request types. In practice, that means:
 
-* If someone sends us an email with their visitor ID asking for it to be deleted, we will manually delete it.
-* Our customers can use the [Server API Delete Visitor](/reference/deletevisitordata) endpoint to programmatically delete all data associated with specific visitors.
+- If someone sends us an email with their visitor ID asking for it to be deleted, we will manually delete it.
+- Our customers can use the [Server API Delete Visitor](/reference/deletevisitordata) endpoint to programmatically delete all data associated with specific visitors.
 
-***
+---
